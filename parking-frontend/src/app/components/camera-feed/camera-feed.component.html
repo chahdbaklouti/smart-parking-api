@@ -1,0 +1,48 @@
+<div class="camera-feed">
+  <!-- Header avec nom et stats -->
+  <div class="camera-header">
+    <h3>{{ parkingName || parkingId }}</h3>
+    <div class="live-badge" *ngIf="stats"><span class="dot"></span> LIVE</div>
+  </div>
+
+  <!-- Zone vidéo -->
+  <div class="video-container">
+    <!-- Loader -->
+    <div class="loader" *ngIf="isLoading">
+      <div class="spinner"></div>
+      <p>Chargement du flux...</p>
+    </div>
+
+    <!-- Erreur -->
+    <div class="error" *ngIf="hasError && !isLoading">
+      <span class="error-icon">📹</span>
+      <p>Flux non disponible</p>
+      <small>Vérifiez que le serveur Flask est lancé</small>
+    </div>
+
+    <!-- Stream vidéo MJPEG -->
+    <img
+      [src]="videoUrl"
+      [alt]="parkingName"
+      (load)="onImageLoad()"
+      (error)="onImageError()"
+      [class.hidden]="isLoading || hasError"
+    />
+  </div>
+
+  <!-- Stats en bas -->
+  <div class="camera-stats" *ngIf="stats" [ngClass]="getOccupancyClass()">
+    <div class="stat">
+      <span class="stat-value occupied">{{ stats.occupied }}</span>
+      <span class="stat-label">Occupées</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value available">{{ stats.available }}</span>
+      <span class="stat-label">Libres</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value rate">{{ stats.occupancy_rate }}%</span>
+      <span class="stat-label">Taux</span>
+    </div>
+  </div>
+</div>

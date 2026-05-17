@@ -1,0 +1,6 @@
+output/results
+models/
+*.pt
+*.avi
+*.mp4
+*.csv

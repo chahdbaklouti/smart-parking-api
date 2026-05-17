@@ -1,0 +1,79 @@
+.stats-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+
+  .icon {
+    font-size: 2.5rem;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .content {
+    flex: 1;
+
+    .value {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .title {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 4px;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: #999;
+      margin-top: 2px;
+    }
+  }
+
+  // Couleurs
+  &.blue {
+    border-left: 4px solid #3498db;
+    .value {
+      color: #3498db;
+    }
+  }
+
+  &.green {
+    border-left: 4px solid #2ecc71;
+    .value {
+      color: #2ecc71;
+    }
+  }
+
+  &.red {
+    border-left: 4px solid #e74c3c;
+    .value {
+      color: #e74c3c;
+    }
+  }
+
+  &.orange {
+    border-left: 4px solid #f39c12;
+    .value {
+      color: #f39c12;
+    }
+  }
+}

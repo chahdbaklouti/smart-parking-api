@@ -1,0 +1,46 @@
+<div class="dashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-left">
+      <h1>🅿️ Smart Parking</h1>
+      <p class="subtitle">Système de surveillance en temps réel</p>
+    </div>
+    <div class="header-right">
+      <div class="datetime">
+        <div class="time">{{ formatTime(currentTime) }}</div>
+        <div class="date">{{ formatDate(currentTime) }}</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Loader -->
+  <div class="loading" *ngIf="isLoading">
+    <div class="spinner"></div>
+    <p>Chargement des caméras...</p>
+  </div>
+
+  <!-- Erreur -->
+  <div class="error-message" *ngIf="error">
+    <span class="error-icon">⚠️</span>
+    <p>{{ error }}</p>
+    <button (click)="loadCameras()">Réessayer</button>
+  </div>
+
+  <!-- Grille des caméras -->
+  <section class="cameras-grid" *ngIf="!isLoading && !error">
+    <h2>📹 Flux des caméras ({{ cameras.length }})</h2>
+    
+    <div class="grid" [class.single]="cameras.length === 1" [class.double]="cameras.length === 2">
+      <app-camera-feed
+        *ngFor="let camera of cameras"
+        [parkingId]="camera.id"
+        [parkingName]="camera.name"
+      ></app-camera-feed>
+    </div>
+
+    <div class="no-cameras" *ngIf="cameras.length === 0">
+      <p>Aucune caméra configurée</p>
+      <small>Ajoutez des vidéos dans le dossier input/ et lancez l'annotation</small>
+    </div>
+  </section>
+</div>
