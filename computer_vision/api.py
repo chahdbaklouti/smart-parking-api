@@ -34,6 +34,13 @@ def _frames(parking_id):
 
         time.sleep(0.033)
 
+@app.route("/")
+def home():
+    return "API WORKING"
+
+@app.route("/test")
+def test():
+    return {"message": "test ok"}
 
 @app.route("/video/<parking_id>")
 def video(parking_id):
@@ -132,6 +139,5 @@ def history(parking_id):
         return {"error": "not found"}, 404
 
     return dict(zip(columns, row))
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
