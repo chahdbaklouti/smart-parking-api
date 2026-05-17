@@ -5,7 +5,6 @@ import os
 from database import get_connection
 from flask import Flask, Response, jsonify
 from flask_cors import CORS
-
 from state import state
 from config import INPUT_DIR, ANNOTATIONS_DIR
 
@@ -63,22 +62,51 @@ def stats_one(parking_id):
 
 @app.route("/api/stats")
 def stats_all():
-    stats = state.get_all_stats()
 
-    total_occ = sum(s["occupied"] for s in stats)
-    total_av = sum(s["available"] for s in stats)
-    total = total_occ + total_av
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT parking_id,
+               timestamp,
+               free_spots,
+               capacity,
+               occupancy_rate
+        FROM occupancy_history
+        ORDER BY timestamp DESC
+        LIMIT 1
+    """)
+
+    row = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if not row:
+        return jsonify({"parkings": [], "global": {}})
+
+    parking_id, timestamp, free_spots, capacity, occupancy_rate = row
+
+    occupied = capacity - free_spots
 
     return jsonify({
-        "parkings": stats,
+        "parkings": [
+            {
+                "parking_id": parking_id,
+                "timestamp": str(timestamp),
+                "available": free_spots,
+                "occupied": occupied,
+                "total": capacity,
+                "occupancy_rate": round(occupancy_rate * 100, 1)
+            }
+        ],
         "global": {
-            "total_occupied": total_occ,
-            "total_available": total_av,
-            "total_spots": total,
-            "occupancy_rate": round(total_occ / total * 100, 1) if total else 0
+            "total_occupied": occupied,
+            "total_available": free_spots,
+            "total_spots": capacity,
+            "occupancy_rate": round(occupancy_rate * 100, 1)
         }
     })
-
 
 # ───────────────────────────────
 # CAMERAS
